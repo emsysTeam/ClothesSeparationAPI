@@ -1,1 +1,1 @@
-# ClothesSeparationAPI
+Django web publish
