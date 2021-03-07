@@ -1,19 +1,54 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Question
+from .models import Image
+from .forms import UploadForm
 # Create your views here.
 
+# def index(request):
+#     """
+#     pybo 질문 목록 출력
+#     """
+#     question_list = Question.objects.order_by('-create_date')
+#     print(list(question_list))
+#     print(Question.objects.all().values())
+#     context = {'question_list': question_list}
+#     print(context)
+#     return render(request, 'ClothesSeparationAPI/question_list.html', context)
+
 def index(request):
-    """
-    pybo 질문 목록 출력
-    """
-    question_list = Question.objects.order_by('-create_date')
-    print(list(question_list))
-    print(Question.objects.all().values())
-    context = {'question_list': question_list}
-    print(context)
-    return render(request, 'ClothesSeparationAPI/question_list.html', context)
+    return HttpResponse('Hello world')
 
-def index2(request):
-    return HttpResponse("DcLab 서버 입니다.")
+def upload(request):
+    print(request)
+    if request.method == 'POST':
+        form = UploadForm(request.POST, request.FILES)
+        print(1)
+        print(request.FILES['image'].name)
+        print(request.FILES['image'].content_type)
+        print(request.FILES['image'].size)
+        
+        if form.is_valid():
+            # print(form.save().id)
+            image_id = form.save().id
+            print(form)
+            return redirect('image_show', image_id)
+            # return render(request, 'imaging/list.html', {"foo": "bar"})
+    else:
+        form = UploadForm()
+    return render(request, 'ClothesSeparationAPI/upload.html', {
+        'form' : form
+    })
 
+def image_list(request):
+    print(request)
+    return render(request, 'ClothesSeparationAPI/list.html')
+
+# def image_show(request, image_id):
+#     return HttpResponse(f'image id: {image_id}')
+
+def image_show(request, image_id):
+    image = Image.objects.filter(id=image_id)
+    print(image.values())
+    return render(request, 'ClothesSeparationAPI/show.html', {
+        'image' : image
+    })
