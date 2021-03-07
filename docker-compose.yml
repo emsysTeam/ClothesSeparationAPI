@@ -10,6 +10,7 @@ services:
             # - ./nginx:/etc/nginx/conf.d
             # - /home/ubuntu/static:/static
             - test_volume:/static
+            - test_volume_2:/media
         depends_on:
             - web
 
@@ -20,7 +21,8 @@ services:
         command: bash -c "python manage.py makemigrations && python manage.py migrate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
         volumes:
         #     - /home/ubuntu/static:/home/ubuntu/static
-              - test_volume:/home/ubuntu/static
+            - test_volume:/home/ubuntu/static
+            - test_volume_2:/home/ubuntu/media
         # ports:
         #    - "8000:8000"
         expose:
@@ -29,4 +31,5 @@ services:
                 bash -c "python manage.py collectstatic && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
 
 volumes:
-  test_volume:
+  test_volume: {}
+  test_volume_2: {}

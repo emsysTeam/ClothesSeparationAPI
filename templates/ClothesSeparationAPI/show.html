@@ -1,0 +1,9 @@
+{% extends 'ClothesSeparationAPI/index.html' %}
+{% block content %}
+    <h2> The image</h2>
+    {% for i in image %}
+    <h2> {{i.image.url}}</h2>
+    <img src = "{{i.image.url}}">
+    {% endfor %}
+    
+{% endblock %}
