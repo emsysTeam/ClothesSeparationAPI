@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from .models import Image
 from .forms import UploadForm
 # Create your views here.
-
+from django.conf import settings
+import os
 # def index(request):
 #     """
 #     pybo 질문 목록 출력
@@ -20,16 +21,21 @@ def index(request):
 
 def upload(request):
     print(request)
+    print(settings.MEDIA_ROOT)
     if request.method == 'POST':
         form = UploadForm(request.POST, request.FILES)
         print(1)
-        print(request.FILES['image'].name)
+        print(request.FILES['image'])
+        print(type(request.FILES['image'].name))
         print(request.FILES['image'].content_type)
         print(request.FILES['image'].size)
         
         if form.is_valid():
             # print(form.save().id)
+            print(os.listdir(settings.MEDIA_ROOT))
             image_id = form.save().id
+            print(os.listdir('/home/ubuntu/media/images/'))
+            print(3)
             print(form)
             return redirect('image_show', image_id)
             # return render(request, 'imaging/list.html', {"foo": "bar"})
