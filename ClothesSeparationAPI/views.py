@@ -4,6 +4,7 @@ from .models import Image
 from .forms import UploadForm
 # Create your views here.
 from django.conf import settings
+from .tasks import startAPI
 import os
 # def index(request):
 #     """
@@ -31,6 +32,7 @@ def upload(request):
         print(request.FILES['image'].size)
         
         if form.is_valid():
+            startAPI.delay(2)
             # print(form.save().id)
             print(os.listdir(settings.MEDIA_ROOT))
             image_id = form.save().id
