@@ -27,7 +27,40 @@ services:
     #    - "8000:8000"
     expose:
       - "8000"
-			
+
+  worker:
+    build: .
+    image: django:gunicorn4
+    container_name: worker
+    # command: celery -A ClothesSeparationAPI.tasks worker --loglevel=info
+    command: celery -A config worker --loglevel=info
+    volumes:
+      #     - /home/ubuntu/static:/home/ubuntu/static
+      - test_volume:/home/ubuntu/static
+      - test_volume_2:/home/ubuntu/media
+      # - ./worker:/home/ubuntu
+    # ports:
+    #    - "8000:8000"
+    expose:
+      - "5672"
+    tty: true
+    depends_on:
+      - web
+      - rabbit
+
+  rabbit:
+    image: rabbitmq:3-management
+    container_name: rabbit
+    expose:
+      - "5672"
+    ports:
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    # volumes:
+    #   - ./host:/home/ubuntu
+
 volumes:
   test_volume: {}
   test_volume_2: {}
