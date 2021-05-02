@@ -1,17 +1,10 @@
-#from __future__ import absolute_import, unicode_literals
-#from celery import Celery
-from celery import shared_task
-import subprocess as sp
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 import tensorflow as tf
 import sys
-#app = Celery('tasks', backend='rpc://', broker=f'amqp://guest:guest@rabbit:5672//')
 
-#@app.task
-#def startAPI(x):
-#    return x
+saved = load_model("/home/ubuntu/save_ckp_frozen.h5")
 
 class fashion_tools(object):
     def __init__(self,imageid,model,version=1.1):
@@ -46,11 +39,7 @@ class fashion_tools(object):
     def get_patch(self):
         return None
 
-
-@shared_task
-def startAPI(x):
-    saved = load_model("/home/ubuntu/save_ckp_frozen.h5")
-    api = fashion_tools('/home/ubuntu/ClothesSeparationAPI/input.PNG', saved)
-    image_ = api.get_dress(False)
-    cv2.imwrite("/home/ubuntu/ClothesSeparationAPI/out.png", image_)
-    return x
+# running code
+api = fashion_tools('/home/ubuntu/ClothesSeparationAPI/input.PNG', saved)
+image_ = api.get_dress(True)
+cv2.imwrite("/home/ubuntu/ClothesSeparationAPI/out.png", image_)
