@@ -7,6 +7,8 @@ RUN apt-get update -y && apt-get install -y libgl1-mesa-dev
 COPY download_model.sh /home/ubuntu
 RUN sh download_model.sh
 COPY requirements.txt /home/ubuntu
+RUN python -m venv env
+RUN /bin/bash -c "source env/bin/activate"
 RUN pip install -r requirements.txt
 COPY . /home/ubuntu
 RUN python manage.py makemigrations
