@@ -32,12 +32,18 @@ def upload(request):
         print(request.FILES['image'].size)
         
         if form.is_valid():
-            startAPI.delay(2)
+            # startAPI.delay(2)
             # print(form.save().id)
             print(os.listdir(settings.MEDIA_ROOT))
             image_id = form.save().id
             print(os.listdir('/home/ubuntu/media/images/'))
             print(3)
+            image = Image.objects.filter(id=image_id)
+            print(image.values())
+            image_name = str(list(image.values())[0]['image'])
+            print(image_name)
+            print(type(image_name))
+            startAPI.delay(str(settings.MEDIA_ROOT) + '/' + image_name)
             print(form)
             return redirect('image_show', image_id)
             # return render(request, 'imaging/list.html', {"foo": "bar"})
@@ -56,7 +62,11 @@ def image_list(request):
 
 def image_show(request, image_id):
     image = Image.objects.filter(id=image_id)
-    print(image.values())
+    # print(image.values())
+    # image_name = str(list(image.values())[0]['image'])
+    # print(image_name)
+    # print(type(image_name))
+    # startAPI.delay(str(settings.MEDIA_ROOT) + '/' + image_name)
     return render(request, 'ClothesSeparationAPI/show.html', {
         'image' : image
     })

@@ -50,7 +50,8 @@ class fashion_tools(object):
 @shared_task
 def startAPI(x):
     saved = load_model("/home/ubuntu/save_ckp_frozen.h5")
-    api = fashion_tools('/home/ubuntu/ClothesSeparationAPI/input.PNG', saved)
+    api = fashion_tools(x, saved)
     image_ = api.get_dress(False)
-    cv2.imwrite("/home/ubuntu/ClothesSeparationAPI/out.png", image_)
+    print('start API :', x)
+    cv2.imwrite(x, image_)
     return x
