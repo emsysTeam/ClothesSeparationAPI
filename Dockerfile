@@ -8,12 +8,12 @@ COPY download_model.sh /home/ubuntu
 RUN sh download_model.sh
 COPY requirements.txt /home/ubuntu
 RUN python -m venv env
-RUN /bin/bash -c "source env/bin/activate"
-RUN pip install -r requirements.txt
+RUN /bin/bash -c "source env/bin/activate && pip install -r requirements.txt"
+# RUN pip install -r requirements.txt
 COPY . /home/ubuntu
-RUN python manage.py makemigrations
-RUN python manage.py migrate --run-syncdb
-RUN python manage.py collectstatic
+RUN /bin/bash -c "source env/bin/activate && python manage.py makemigrations && python manage.py migrate --run-syncdb && python manage.py collectstatic"
+# RUN python manage.py migrate --run-syncdb
+# RUN python manage.py collectstatic
 
 # CMD python manage.py runserver 0.0.0.0:8000
-CMD gunicorn --bind 0.0.0.0:8000 config.wsgi:application
+# CMD gunicorn --bind 0.0.0.0:8000 config.wsgi:application
