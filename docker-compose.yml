@@ -1,7 +1,10 @@
 version: "3"
 services:
   nginx:
-    build: ./nginx
+    build: 
+      context: ./nginx
+      cache_from:
+        - nginx:latest
     image: nginx:8888
     container_name: nginx
     ports:
@@ -15,7 +18,10 @@ services:
       - web
 
   web:
-    build: .
+    build:
+      context: .
+      cache_from:
+        - django:gunicorn4
     image: django:gunicorn4
     container_name: django
     command: /bin/bash -c "source env/bin/activate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
@@ -29,7 +35,10 @@ services:
       - "8000"
 
   worker:
-    build: .
+    build:
+      context: .
+      cache_from:
+        - django:gunicorn4
     image: django:gunicorn4
     container_name: worker
     # command: celery -A ClothesSeparationAPI.tasks worker --loglevel=info
