@@ -86,5 +86,6 @@ def image_show(request, image_id, task_id):
     # print(type(image_name))
     # startAPI.delay(str(settings.MEDIA_ROOT) + '/' + image_name)
     return render(request, 'ClothesSeparationAPI/show.html', {
-        'image' : image
+        'image' : image,
+        'task_status' : result.status
     })
