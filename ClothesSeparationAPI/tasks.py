@@ -1,6 +1,6 @@
 #from __future__ import absolute_import, unicode_literals
 #from celery import Celery
-from celery import shared_task
+from celery import shared_task, current_task
 import subprocess as sp
 import cv2
 import numpy as np
@@ -52,6 +52,6 @@ def startAPI(x):
     saved = load_model("/home/ubuntu/save_ckp_frozen.h5")
     api = fashion_tools(x, saved)
     image_ = api.get_dress(False)
-    print('start API :', x)
+    print('task ID :', current_task.request.id)
     cv2.imwrite(x, image_)
-    return x
+    return current_task.request.id

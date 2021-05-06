@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('upload/', views.upload, name='upload'),
     path('list/', views.image_list, name='image_list'),
-    path('show/<int:image_id>/', views.image_show, name='image_show')
+    path('show/<int:image_id>/<str:task_id>/', views.image_show, name='image_show')
 ]
