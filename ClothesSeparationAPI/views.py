@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+# from django.contrib import messages
 from .models import Image
 from .forms import UploadForm
 # Create your views here.
 from django.conf import settings
 from .tasks import startAPI
+import celery
 import os
 # def index(request):
 #     """
@@ -43,9 +45,12 @@ def upload(request):
             image_name = str(list(image.values())[0]['image'])
             print(image_name)
             print(type(image_name))
-            startAPI.delay(str(settings.MEDIA_ROOT) + '/' + image_name)
+            task_id = startAPI.delay(str(settings.MEDIA_ROOT) + '/' + image_name)
             print(form)
-            return redirect('image_show', image_id)
+            # messages.success(request, task_id)
+            # 세션 부여
+            # request.session['task_id'] = task_id
+            return redirect('image_show', image_id, task_id)
             # return render(request, 'imaging/list.html', {"foo": "bar"})
     else:
         form = UploadForm()
@@ -60,8 +65,21 @@ def image_list(request):
 # def image_show(request, image_id):
 #     return HttpResponse(f'image id: {image_id}')
 
-def image_show(request, image_id):
+def image_show(request, image_id, task_id):
     image = Image.objects.filter(id=image_id)
+    # redirect : url에 붙어오는 값
+    print('task ID : ', task_id)
+    result = celery.result.AsyncResult(task_id)
+    print('task STATUS : ', result.status)
+
+    # 세션 확인
+    # session_id = request.session.session_key
+    # session_value = request.session['task_id']
+    # print(session_value)
+
+    # storage = messages.get_messages(request)
+    # for message in storage:
+    #     print('message : ', celery.result.AsyncResult(message))
     # print(image.values())
     # image_name = str(list(image.values())[0]['image'])
     # print(image_name)
