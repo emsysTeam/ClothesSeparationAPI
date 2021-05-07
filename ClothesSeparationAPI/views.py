@@ -70,6 +70,9 @@ def image_show(request, image_id, task_id):
     # redirect : url에 붙어오는 값
     print('task ID : ', task_id)
     result = celery.result.AsyncResult(task_id)
+
+    # issue : task_id 에 해당하는 task가 없을 경우, 예외처리 필요
+
     print('task STATUS : ', result.status)
 
     # 세션 확인
