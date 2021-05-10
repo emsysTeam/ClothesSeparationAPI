@@ -69,6 +69,7 @@ def image_show(request, image_id, task_id):
     image = Image.objects.filter(id=image_id)
     # redirect : url에 붙어오는 값
     print('task ID : ', task_id)
+    # issue : 실제 task_id와 일치하지 않더라도 result.status가 PENDING 을 반환함
     result = celery.result.AsyncResult(task_id)
 
     # issue : task_id 에 해당하는 task가 없을 경우, 예외처리 필요
