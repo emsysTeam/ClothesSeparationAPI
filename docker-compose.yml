@@ -5,6 +5,8 @@ services:
       context: ./nginx
       cache_from:
         - nginx:latest
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     image: nginx:8888
     container_name: nginx
     ports:
@@ -22,6 +24,8 @@ services:
       context: .
       cache_from:
         - django:gunicorn4
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
     container_name: django
     command: /bin/bash -c "source env/bin/activate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
@@ -39,6 +43,8 @@ services:
       context: .
       cache_from:
         - django:gunicorn4
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
     container_name: worker
     # command: celery -A ClothesSeparationAPI.tasks worker --loglevel=info
@@ -58,6 +64,12 @@ services:
       - rabbit
 
   rabbit:
+    build:
+      context: ./rabbit
+      cache_from:
+        - rabbitmq:3-management
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     image: rabbitmq:3-management
     container_name: rabbit
     expose:
