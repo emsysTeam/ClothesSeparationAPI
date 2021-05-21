@@ -81,6 +81,18 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     # volumes:
     #   - ./host:/home/ubuntu
+  node:
+    build:
+      context: ./node
+      cache_from:
+        - node:api
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    image: node:api
+    container_name: node
+    ports:
+      - "5000:5000"
+    command: node index.js
 
 volumes:
   test_volume: {}
