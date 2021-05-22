@@ -57,9 +57,10 @@ app.post('/api/users/login', (req, res) => {
         if (err) return res.status(400).send(err)
 
         // save token to cookie
+        console.log(req);
         res.cookie('x_auth', user.token)
           .status(200)
-          .redirect('http://localhost/ClothesSeparationAPI/upload');
+          .redirect(`http://${req.hostname}/ClothesSeparationAPI/`);
           // .json({ loginSuccess: true, userid: user._id })
       })
     })
