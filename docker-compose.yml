@@ -8,7 +8,7 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
     image: nginx:8888
-    container_name: nginx
+    #container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -27,7 +27,7 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
-    container_name: django
+    #container_name: django
     command: /bin/bash -c "source env/bin/activate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
     volumes:
       #     - /home/ubuntu/static:/home/ubuntu/static
@@ -46,7 +46,7 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
-    container_name: worker
+    #container_name: worker
     # command: celery -A ClothesSeparationAPI.tasks worker --loglevel=info
     command: /bin/bash -c "source env/bin/activate && celery -A config worker --loglevel=info --max-tasks-per-child 1 -c 1"
     volumes:
@@ -71,7 +71,7 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
     image: rabbitmq:3-management
-    container_name: rabbit
+    #container_name: rabbit
     expose:
       - "5672"
     ports:
@@ -81,6 +81,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     # volumes:
     #   - ./host:/home/ubuntu
+
   node:
     build:
       context: ./node
@@ -89,10 +90,13 @@ services:
       args:
         BUILDKIT_INLINE_CACHE: 1
     image: node:api
-    container_name: node
+    #container_name: node
     ports:
       - "5000:5000"
     command: node index.js
+    environment:
+      - MONGO_URI=insert mongo uri here
+      - NODE_ENV=dev
 
 volumes:
   test_volume: {}
