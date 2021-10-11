@@ -3,10 +3,6 @@ services:
   nginx:
     build: 
       context: ./nginx
-      cache_from:
-        - nginx:latest
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: nginx:8888
     #container_name: nginx
     ports:
@@ -22,10 +18,6 @@ services:
   web:
     build:
       context: .
-      cache_from:
-        - django:gunicorn4
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
     #container_name: django
     command: /bin/bash -c "source env/bin/activate && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"
@@ -41,10 +33,6 @@ services:
   worker:
     build:
       context: .
-      cache_from:
-        - django:gunicorn4
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: django:gunicorn4
     #container_name: worker
     # command: celery -A ClothesSeparationAPI.tasks worker --loglevel=info
@@ -66,10 +54,6 @@ services:
   rabbit:
     build:
       context: ./rabbit
-      cache_from:
-        - rabbitmq:3-management
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: rabbitmq:3-management
     #container_name: rabbit
     expose:
@@ -85,18 +69,19 @@ services:
   node:
     build:
       context: ./node
-      cache_from:
-        - node:api
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: node:api
     #container_name: node
     ports:
       - "5000:5000"
     command: node index.js
     environment:
-      - MONGO_URI=insert mongo uri here
-      - NODE_ENV=dev
+      - MONGO_URI=mongodb://mongo:27017
+      - NODE_ENV=production
+
+  mongo:
+    image: mongo:latest
+    expose:
+      - "27017"
 
 volumes:
   test_volume: {}
